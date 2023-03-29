@@ -40,11 +40,11 @@ type ProductCategory struct {
 }
 
 type Price struct {
-	CurrentPrice       int    `json:"currentPrice"`
-	IsIncludedInMenu   bool   `json:"isIncludedInMenu"`
-	NextPrice          int    `json:"nextPrice"`
-	NextIncludedInMenu bool   `json:"nextIncludedInMenu"`
-	NextDatePrice      string `json:"nextDatePrice"`
+	CurrentPrice       float64 `json:"currentPrice"`
+	IsIncludedInMenu   bool    `json:"isIncludedInMenu"`
+	NextPrice          float64 `json:"nextPrice"`
+	NextIncludedInMenu bool    `json:"nextIncludedInMenu"`
+	NextDatePrice      string  `json:"nextDatePrice"`
 }
 
 type SizePrices struct {
@@ -88,15 +88,15 @@ type GroupModifiers struct {
 }
 
 type Product struct {
-	FatAmount               int              `json:"fatAmount"`
-	ProteinsAmount          int              `json:"proteinsAmount"`
-	CarbohydratesAmount     int              `json:"carbohydratesAmount"`
-	EnergyAmount            int              `json:"energyAmount"`
-	FatFullAmount           int              `json:"fatFullAmount"`
-	ProteinsFullAmount      int              `json:"proteinsFullAmount"`
-	CarbohydratesFullAmount int              `json:"carbohydratesFullAmount"`
-	EnergyFullAmount        int              `json:"energyFullAmount"`
-	Weight                  int              `json:"weight"`
+	FatAmount               float64          `json:"fatAmount"`
+	ProteinsAmount          float64          `json:"proteinsAmount"`
+	CarbohydratesAmount     float64          `json:"carbohydratesAmount"`
+	EnergyAmount            float64          `json:"energyAmount"`
+	FatFullAmount           float64          `json:"fatFullAmount"`
+	ProteinsFullAmount      float64          `json:"proteinsFullAmount"`
+	CarbohydratesFullAmount float64          `json:"carbohydratesFullAmount"`
+	EnergyFullAmount        float64          `json:"energyFullAmount"`
+	Weight                  float64          `json:"weight"`
 	GroupID                 uuid.UUID        `json:"groupId"`
 	ProductCategoryID       uuid.UUID        `json:"productCategoryId"`
 	Type                    string           `json:"type"`
