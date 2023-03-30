@@ -14,7 +14,7 @@ type OrderCreateRequest struct {
 	// Order.
 	Order Order `json:"order"`
 	// Order creation parameters.
-	CreateOrderSettings CreateOrderSettings `json:"createOrderSettings"`
+	CreateOrderSettings *CreateOrderSettings `json:"createOrderSettings,omitempty"`
 }
 
 type OrderCreateResponse struct {
@@ -143,33 +143,38 @@ const (
 type CreateOrderSettings struct {
 	// Timeout in seconds that specifies how much time is given for order to reach iikoFront.
 	// After this time, order is nullified if iikoFront doesn't take it. By default - 8 seconds.
-	TransportToFrontTimeout int `json:"transportToFrontTimeout"`
+	TransportToFrontTimeout *int `json:"transportToFrontTimeout,omitempty"`
 }
 
 type Customer struct {
 	// Existing customer ID in RMS.
 	// If null - the phone number is searched in database, otherwise the new customer is created in RMS.
-	ID uuid.UUID `json:"id"`
+	ID *uuid.UUID `json:"id,omitempty"`
 	// Name of customer.
 	// Required for new customers (i.e. if "id" == null) Not required if "id" specified.
-	Name string `json:"name"`
+	Name *string `json:"name,omitempty"`
 	// Last name.
-	Surname string `json:"surname"`
+	Surname *string `json:"surname,omitempty"`
 	// Comment.
-	Comment string `json:"comment"`
+	Comment *string `json:"comment,omitempty"`
 	// Date of birth.
-	Birthdate time.Time `json:"birthdate"`
+	Birthdate *time.Time `json:"birthdate,omitempty"`
 	// Email.
-	Email string `json:"email"`
+	Email *string `json:"email,omitempty"`
 	// Whether customer receives order status notification messages.
-	ShouldReceiveOrderStatusNotifications bool `json:"shouldReceiveOrderStatusNotifications"`
+	ShouldReceiveOrderStatusNotifications *bool `json:"shouldReceiveOrderStatusNotifications"`
 	// Gender.
-	Gender Gender `json:"gender"`
-	// Is client in blacklist.
-	InBlacklist bool `json:"inBlacklist"`
-	// Reason why client was added to blacklist.
-	BlacklistReason string `json:"blacklistReason"`
+	Gender Gender `json:"gender,omitempty"`
+	// Type
+	Type CustomerType `json:"type,omitempty"`
 }
+
+type CustomerType string
+
+const (
+	Regular CustomerType = "regular"
+	OneTime CustomerType = "one-time"
+)
 
 type Gender string
 
@@ -183,7 +188,7 @@ type Guests struct {
 	// Number of persons.
 	Count int `json:"count"`
 	// Attribute that shows whether order must be split among guests.
-	SplitBetweenPersons bool `json:"splitBetweenPersons"`
+	SplitBetweenPersons bool `json:"splitBetweenPersons,omitempty"`
 }
 
 type Payment struct {
@@ -194,7 +199,7 @@ type Payment struct {
 	// Amount due.
 	Sum float64 `json:"sum"`
 	// Additional payment parameters.
-	PaymentAdditionalData PaymentAdditionalData `json:"paymentAdditionalData"`
+	PaymentAdditionalData *PaymentAdditionalData `json:"paymentAdditionalData,omitempty"`
 	// Whether payment item is processed by external payment system (made from outside).
 	IsProcessedExternally bool `json:"isProcessedExternally"`
 	// Whether the payment item is externally fiscalized.
@@ -241,22 +246,31 @@ const (
 )
 
 type Item struct {
+	// ProductID is ID of menu item.
+	// Can be obtained by /api/1/nomenclature operation.
+	ProductID uuid.UUID `json:"productId"`
 	// Main component.
 	PrimaryComponent Component `json:"primaryComponent"`
 	// Minor component.
-	SecondaryComponent *Component `json:"secondaryComponent"`
+	SecondaryComponent *Component `json:"secondaryComponent,omitempty"`
 	// Indivisible modifiers.
-	CommonModifiers []Modifier `json:"commonModifiers"`
+	CommonModifiers []Modifier `json:"commonModifiers,omitempty"`
+	// Modifiers
+	Modifiers []Modifier `json:"modifiers,omitempty"`
+	// Price
+	Price *float64 `json:"price,omitempty"`
+	// PositionID
+	PositionID *uuid.UUID `json:"positionId,omitempty"`
 	// OrderItemType.
 	Type OrderItemType `json:"type"`
 	// Quantity.
-	Amount int `json:"amount"`
+	Amount float64 `json:"amount"`
 	// Size ID. Required if a stock list item has a size scale.
-	ProductSizeID uuid.UUID `json:"productSizeId"`
+	ProductSizeID *uuid.UUID `json:"productSizeId,omitempty"`
 	// Combo details if combo includes order item.
-	ComboInformation ComboInformation `json:"comboInformation"`
+	ComboInformation *ComboInformation `json:"comboInformation,omitempty"`
 	// Comment.
-	Comment string `json:"comment"`
+	Comment *string `json:"comment,omitempty"`
 }
 
 type ComboInformation struct {
@@ -270,19 +284,19 @@ type ComboInformation struct {
 
 type Component struct {
 	ProductID  uuid.UUID  `json:"productId"`
-	Price      float64    `json:"float64"`
-	PositionID uuid.UUID  `json:"positionId"`
-	Modifiers  []Modifier `json:"modifiers"`
+	Price      *float64   `json:"float64,omitempty"`
+	PositionID *uuid.UUID `json:"positionId,omitempty"`
+	Modifiers  []Modifier `json:"modifiers,omitempty"`
 }
 
 type Modifier struct {
 	ProductID uuid.UUID `json:"productId"`
-	Amount    int       `json:"amount"`
+	Amount    float64   `json:"amount"`
 	// Modifiers group ID (for group modifier). Required for a group modifier.
 	// Can be obtained by /api/1/nomenclature operation.
-	ProductGroupID uuid.UUID `json:"productGroupId"`
-	Price          float64   `json:"float64"`
-	PositionID     uuid.UUID `json:"positionId"`
+	ProductGroupID *uuid.UUID `json:"productGroupId,omitempty"`
+	Price          *float64   `json:"float64,omitempty"`
+	PositionID     *uuid.UUID `json:"positionId,omitempty"`
 }
 
 type Tip struct {
@@ -314,17 +328,17 @@ type Waiter struct {
 
 type Order struct {
 	// Order ID.
-	ID uuid.UUID `json:"id"`
+	ID *uuid.UUID `json:"id,omitempty"`
 	// Order type ID. Can be obtained by /api/1/deliveries/order_types operation.
-	OrderTypeID uuid.UUID `json:"orderTypeId"`
+	OrderTypeID *uuid.UUID `json:"orderTypeId,omitempty"`
 	// Order external number.
-	ExternalNumber string `json:"externalNumber"`
+	ExternalNumber *string `json:"externalNumber,omitempty"`
 	// TableIDs. Can be obtained by /api/1/reserve/available_restaurant_sections operation.
-	TableIDs []uuid.UUID `json:"tableIds"`
+	TableIDs []uuid.UUID `json:"tableIds,omitempty"`
 	// Guest.
-	Customer Customer `json:"customer"`
+	Customer *Customer `json:"customer,omitempty"`
 	// Guest phone.
-	Phone string `json:"phone"`
+	Phone *string `json:"phone,omitempty"`
 	// Order status.
 	OrderStatus OrderStatus `json:"status"`
 	// Order creation date (terminal time zone).
@@ -332,30 +346,30 @@ type Order struct {
 	// Order waiter.
 	Waiter Waiter `json:"waiter"`
 	// Guests information.
-	Guests Guests `json:"guests"`
+	Guests *Guests `json:"guests,omitempty"`
 	// Tab name (only for fastfood terminals group in tab mode).
-	TabName string `json:"tabName"`
+	TabName *string `json:"tabName,omitempty"`
 	// Order items.
 	Items []Item `json:"items"`
 	// Combos included in order.
-	Combos []Combo `json:"combos"`
+	Combos []Combo `json:"combos,omitempty"`
 	// Order payment components.
-	Payments []Payment `json:"payments"`
+	Payments []Payment `json:"payments,omitempty"`
 	// Order tips components.
-	Tips []Tip `json:"tips"`
+	Tips []Tip `json:"tips,omitempty"`
 	// The string key (marker) of the source (partner - api user) that created the order.
 	// Needed to limit the visibility of orders for external integration.
-	SourceKey string `json:"sourceKey"`
+	SourceKey *string `json:"sourceKey,omitempty"`
 	// Invoice printing time (guest bill time).
-	WhenBillPrinted time.Time `json:"whenBillPrinted"`
+	WhenBillPrinted time.Time `json:"whenBillPrinted,omitempty"`
 	// Delivery closing time (Local for delivery terminal).
-	WhenClosed time.Time `json:"whenClosed"`
+	WhenClosed time.Time `json:"whenClosed,omitempty"`
 	// Concept.
-	Conception Conception `json:"conception"`
+	Conception Conception `json:"conception,omitempty"`
 	// Discounts/surcharges.
-	DiscountsInfo []DiscountInfo `json:"discountsInfo"`
+	DiscountsInfo []DiscountInfo `json:"discountsInfo,omitempty"`
 	// Information about iikoCard5.
-	IIKOCard5Info IIKOCard5Info `json:"iikoCard5Info"`
+	IIKOCard5Info IIKOCard5Info `json:"iikoCard5Info,omitempty"`
 }
 
 type Conception struct {
@@ -416,8 +430,8 @@ type DiscountInfo struct {
 // OrderCreate ...
 //
 // iiko API: /api/1/order/create
-func (c *Client) OrderCreate(req *OrderCreateResponse, opts ...Option) (*OrderCreateRequest, error) {
-	var response OrderCreateRequest
+func (c *Client) OrderCreate(req *OrderCreateRequest, opts ...Option) (*OrderCreateResponse, error) {
+	var response OrderCreateResponse
 
 	if err := c.post(true, "/api/1/order/create", req, &response, opts...); err != nil {
 		return nil, err
