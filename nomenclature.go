@@ -110,7 +110,7 @@ type Product struct {
 	GroupModifiers          []GroupModifiers `json:"groupModifiers"`
 	ImageLinks              []string         `json:"imageLinks"`
 	DoNotPrintInCheque      bool             `json:"doNotPrintInCheque"`
-	ParentGroup             string           `json:"parentGroup"`
+	ParentGroup             uuid.UUID        `json:"parentGroup"`
 	Order                   int              `json:"order"`
 	FullNameEnglish         string           `json:"fullNameEnglish"`
 	UseBalanceForSell       bool             `json:"useBalanceForSell"`

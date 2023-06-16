@@ -138,7 +138,7 @@ func (c *Client) MethodName(req *MethodNameRequest, opts ...Option) (*MethodName
 - [ ] /order/change_payments
 - [ ] /reserve/available_organizations
 - [ ] /reserve/available_terminal_groups
-- [ ] /reserve/available_restaurant_sections
+- [x] /reserve/available_restaurant_sections
 - [ ] /reserve/restaurant_sections_workload
 - [ ] /reserve/create
 - [ ] /reserve/status_by_id
